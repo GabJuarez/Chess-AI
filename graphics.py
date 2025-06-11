@@ -82,7 +82,6 @@ def dibujar_tablero(pantalla):
 
 def dibujar_piezas(pantalla, tablero_chess):
     for casilla in chess.SQUARES:
-        tablero_chess = chess.Board()
         pieza = tablero_chess.piece_at(casilla)
         if pieza:
             columna = chess.square_file(casilla) #piece_at devuelve la pieza que esta en una casilla especifica del tablero
@@ -135,9 +134,10 @@ def mostrar_pantalla_inicio(pantalla):
         
         if boton_jugar.clicked:
             esperando = False
-
         pygame.display.flip()
 
+
+"""
 def iniciar_juego(pantalla):
     pygame.display.set_caption("Ajedrez")
     clock = pygame.time.Clock()
@@ -145,16 +145,60 @@ def iniciar_juego(pantalla):
 
     cargar_imagenes()
     ejecutando = True
+    casilla_origen = None
 
-    while ejecutando == True:
+    while ejecutando:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 ejecutando = False
                 sys.exit()
+
+            elif evento.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+                columna = pos[0] // TAM_CASILLA
+                fila = pos[1] // TAM_CASILLA
+                casilla = chess.square(columna, 7 - fila)
+
+                if casilla_origen is None:
+                    pieza = tablero.piece_at(casilla)
+                    if pieza and pieza.color == tablero.turn:
+                        casilla_origen = casilla
+                else:
+                    movimiento = chess.Move(casilla_origen, casilla)
+                    if movimiento in tablero.legal_moves:
+                        tablero.push(movimiento)
+                    casilla_origen = None
+        
+        if tablero.is_check():
+            print("Jaque!")
+
+        elif tablero.is_stalemate():
+            print("Empate!")
+            ejecutando = False
+
+        elif tablero.is_repetition():
+            print("Empate por repetición!")
+            ejecutando = False
+
+        elif tablero.is_insufficient_material():
+            print("Empate por material insuficiente!")
+            ejecutando = False
+
+        elif tablero.is_seventyfive_moves():
+            print("Empate por 75 movimientos!")
+            ejecutando = False
+
+        elif tablero.is_variant_draw():
+            print("Empate por variante!")
+            ejecutando = False
+
+        elif tablero.is_checkmate():
+            print("Jaque mate!")
+            ejecutando = False
 
         dibujar_juego(pantalla, tablero)
         pygame.display.flip()
         clock.tick(30)
 
     pygame.quit()
-
+"""
