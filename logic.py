@@ -1,4 +1,5 @@
 import chess
+import pygame
 
 class JuegoAjedrez:
     def __init__(self):
@@ -16,8 +17,21 @@ class JuegoAjedrez:
     #si no es none significa que ya hay casilla de origen
         else:
             movimiento = chess.Move(self.casilla_origen, casilla)
+            pieza_origen = self.tablero.piece_at(self.casilla_origen)
+
+            es_promocion = (
+            pieza_origen.piece_type == chess.PAWN and 
+            chess.square_rank(casilla) == 0 or chess.square_rank(casilla) == 7
+            )
+
+            if es_promocion:
+                movimiento = chess.Move(self.casilla_origen, casilla, promotion=chess.QUEEN)
+            else:
+                movimiento = chess.Move(self.casilla_origen, casilla)
+
             if movimiento in self.tablero.legal_moves:
                 self.tablero.push(movimiento)
+
             self.casilla_origen = None
     #si el movimiento es legal, se pushea el movimiento
 

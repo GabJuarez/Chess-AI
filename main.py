@@ -34,6 +34,8 @@ while corriendo:
     graphics.dibujar_piezas(pantalla, juego.tablero)
 
 #imprimiendon en consola solo para probar
+
+    
     if juego.tablero.is_checkmate():
             print("Jaque mate!")
             ejecutando = False
