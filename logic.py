@@ -5,6 +5,8 @@ class JuegoAjedrez:
     def __init__(self):
         self.tablero = chess.Board()
         self.casilla_origen = None
+        self.movimientos_legales = []
+        self.movimientos_realizados = []
 
     #si la casilla origen es None, significa que no se ha seleccionado una pieza
     def seleccionar_casilla(self, fila, columna):
@@ -13,6 +15,11 @@ class JuegoAjedrez:
             pieza = self.tablero.piece_at(casilla)
             if pieza and pieza.color == self.tablero.turn: 
                 self.casilla_origen = casilla
+
+    #se guardan los legal moves para ponerlos de manera visual al seleccionar una pieza
+                for movimiento in self.tablero.legal_moves:
+                    if movimiento.from_square == casilla:
+                        self.movimientos_legales.append(movimiento.to_square)
     #si la pieza es del color del jugador actual se guarda la casilla como origen
     #si no es none significa que ya hay casilla de origen
         else:
@@ -32,8 +39,11 @@ class JuegoAjedrez:
             if movimiento in self.tablero.legal_moves:
                 self.tablero.push(movimiento)
 
+            self.movimientos_legales = []
+            self.movimientos_realizados.append(movimiento)
             self.casilla_origen = None
     #si el movimiento es legal, se pushea el movimiento
+    #se limpia la lista de legal moves
 
     def es_jaque(self):
         return self.tablero.is_check()

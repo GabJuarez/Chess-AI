@@ -1,6 +1,7 @@
 import chess
 import pygame 
 import sys
+
 class Button:
     def __init__(self, x=0, y=0, text="", width=200, height=50, elev=6):
         self.font = pygame.font.Font('res/fonts/Silkscreen-Bold.ttf', 24)
@@ -91,9 +92,10 @@ def dibujar_piezas(pantalla, tablero_chess):
             imagen = IMAGENES[clave_imagen]
             pantalla.blit(imagen, pygame.Rect(columna * TAM_CASILLA, fila * TAM_CASILLA, TAM_CASILLA, TAM_CASILLA)) #block image tansfer
 
-def dibujar_juego(pantalla, tablero_chess):
+def dibujar_juego(pantalla, tablero_chess, movimientos_legales = []):
     dibujar_tablero(pantalla)
     dibujar_piezas(pantalla, tablero_chess)
+    dibujar_movimientos_legales(pantalla, movimientos_legales)
 
 def mostrar_pantalla_inicio(pantalla):
     fuente = pygame.font.Font('res/fonts/Silkscreen-Bold.ttf', 40)
@@ -137,68 +139,22 @@ def mostrar_pantalla_inicio(pantalla):
         pygame.display.flip()
 
 
-"""
-def iniciar_juego(pantalla):
-    pygame.display.set_caption("Ajedrez")
-    clock = pygame.time.Clock()
-    tablero = chess.Board()
+def dibujar_movimientos_legales(pantalla, movimientos):
+    color = (0, 160, 154)
+    r = 4 #tamano del radio de los circulos
 
-    cargar_imagenes()
-    ejecutando = True
-    casilla_origen = None
+    for casilla in movimientos:
+        columna = chess.square_file(casilla)
+        fila = 7 - chess.square_rank(casilla)
+        centro_x = columna * TAM_CASILLA + TAM_CASILLA // 2
+        centro_y = fila * TAM_CASILLA + TAM_CASILLA // 2
+        pygame.draw.circle(pantalla, color, (centro_x, centro_y), r)
 
-    while ejecutando:
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                ejecutando = False
-                sys.exit()
 
-            elif evento.type == pygame.MOUSEBUTTONDOWN:
-                pos = pygame.mouse.get_pos()
-                columna = pos[0] // TAM_CASILLA
-                fila = pos[1] // TAM_CASILLA
-                casilla = chess.square(columna, 7 - fila)
 
-                if casilla_origen is None:
-                    pieza = tablero.piece_at(casilla)
-                    if pieza and pieza.color == tablero.turn:
-                        casilla_origen = casilla
-                else:
-                    movimiento = chess.Move(casilla_origen, casilla)
-                    if movimiento in tablero.legal_moves:
-                        tablero.push(movimiento)
-                    casilla_origen = None
-        
-        if tablero.is_check():
-            print("Jaque!")
 
-        elif tablero.is_stalemate():
-            print("Empate!")
-            ejecutando = False
 
-        elif tablero.is_repetition():
-            print("Empate por repetición!")
-            ejecutando = False
 
-        elif tablero.is_insufficient_material():
-            print("Empate por material insuficiente!")
-            ejecutando = False
 
-        elif tablero.is_seventyfive_moves():
-            print("Empate por 75 movimientos!")
-            ejecutando = False
 
-        elif tablero.is_variant_draw():
-            print("Empate por variante!")
-            ejecutando = False
 
-        elif tablero.is_checkmate():
-            print("Jaque mate!")
-            ejecutando = False
-
-        dibujar_juego(pantalla, tablero)
-        pygame.display.flip()
-        clock.tick(30)
-
-    pygame.quit()
-"""

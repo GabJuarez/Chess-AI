@@ -3,14 +3,15 @@ import chess
 import graphics
 import logic
 import sys
+import threading
 
 pygame.init()
-ANCHO, ALTO = 480, 480
+ANCHO, ALTO =  graphics.TAM_CASILLA * 8, graphics.TAM_CASILLA * 8
 pantalla = pygame.display.set_mode((ANCHO, ALTO))
 pygame.display.set_caption("Ajedrez")
 graphics.mostrar_pantalla_inicio(pantalla)
 
-#inicializando la logica
+# Inicializando la lógica del juego
 juego = logic.JuegoAjedrez()
 
 clock = pygame.time.Clock()
@@ -25,45 +26,37 @@ while corriendo:
             x, y = pygame.mouse.get_pos()
             columna = x // graphics.TAM_CASILLA
             fila = y // graphics.TAM_CASILLA
-            casilla = chess.square(columna, 7 - fila)  # invertir fila porque chess usa 0 abajo
             juego.seleccionar_casilla(fila, columna)
-            casilla_origen = juego.casilla_origen
 
     graphics.dibujar_tablero(pantalla)
     graphics.cargar_imagenes()
     graphics.dibujar_piezas(pantalla, juego.tablero)
 
-#imprimiendon en consola solo para probar
+    # si hay una casilla seleccionada se dibujan los movimientos legales 
+    if juego.casilla_origen is not None:
+        graphics.dibujar_movimientos_legales(pantalla, juego.movimientos_legales)
 
-    
+    # probando los estados de la partida por consola
     if juego.tablero.is_checkmate():
-            print("Jaque mate!")
-            ejecutando = False
-
+        print("Jaque mate!")
+        corriendo = False
     elif juego.tablero.is_check():
-            print("Jaque!")
-
+        print("Jaque!")
     elif juego.tablero.is_stalemate():
-            print("Empate!")
-            ejecutando = False
-
+        print("Empate!")
+        corriendo = False
     elif juego.tablero.is_repetition():
-            print("Empate por repetición!")
-            ejecutando = False
-
+        print("Empate por repetición!")
+        corriendo = False
     elif juego.tablero.is_insufficient_material():
-            print("Empate por material insuficiente!")
-            ejecutando = False
-
+        print("Empate por material insuficiente!")
+        corriendo = False
     elif juego.tablero.is_seventyfive_moves():
-            print("Empate por 75 movimientos!")
-            ejecutando = False
-
+        print("Empate por 75 movimientos!")
+        corriendo = False
     elif juego.tablero.is_variant_draw():
-            print("Empate por variante!")
-            ejecutando = False
-
-    
+        print("Empate por variante!")
+        corriendo = False
 
     pygame.display.flip()
     clock.tick(30)
