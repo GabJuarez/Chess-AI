@@ -70,6 +70,10 @@ def cargar_imagenes():
             (TAM_CASILLA, TAM_CASILLA)
         )
 
+#variables globales para ajustar el dibujo del tablero y las piezas en la ventana
+OFFSET_X = 285
+OFFSET_Y = 50
+
 def dibujar_tablero(pantalla):
     colores = [pygame.Color("white"), pygame.Color("grey")]
     for fila in range(8):
@@ -78,7 +82,11 @@ def dibujar_tablero(pantalla):
             pygame.draw.rect(
                 pantalla,
                 color,
-                pygame.Rect(columna * TAM_CASILLA, fila * TAM_CASILLA, TAM_CASILLA, TAM_CASILLA)
+                pygame.Rect(
+                    columna * TAM_CASILLA + OFFSET_X,
+                    fila * TAM_CASILLA  + OFFSET_Y,
+                    TAM_CASILLA, 
+                    TAM_CASILLA)
             )
 
 def dibujar_piezas(pantalla, tablero_chess):
@@ -90,15 +98,15 @@ def dibujar_piezas(pantalla, tablero_chess):
             color = 'w' if pieza.color == chess.WHITE else 'b'
             clave_imagen = color + pieza.symbol().lower() #.lower porque la libreria de chess devuelve mayuscula o no dependiendo del color
             imagen = IMAGENES[clave_imagen]
-            pantalla.blit(imagen, pygame.Rect(columna * TAM_CASILLA, fila * TAM_CASILLA, TAM_CASILLA, TAM_CASILLA)) #block image tansfer
-
-def dibujar_juego(pantalla, tablero_chess, movimientos_legales = []):
-    dibujar_tablero(pantalla)
-    dibujar_piezas(pantalla, tablero_chess)
-    dibujar_movimientos_legales(pantalla, movimientos_legales)
+            pantalla.blit(imagen,
+                         pygame.Rect(
+                            columna * TAM_CASILLA + OFFSET_X,
+                            fila * TAM_CASILLA + OFFSET_Y,
+                            TAM_CASILLA,
+                            TAM_CASILLA)) #block image tansfer a la pantalla
 
 def mostrar_pantalla_inicio(pantalla):
-    fuente = pygame.font.Font('res/fonts/Silkscreen-Bold.ttf', 40)
+    fuente = pygame.font.Font('res/fonts/Silkscreen-Bold.ttf', 90)
     fuente2 = pygame.font.Font('res/fonts/Silkscreen-Bold.ttf', 8)
     texto = 'Ajedrez'
     autores= ['Gabriel Juárez', 
@@ -107,11 +115,11 @@ def mostrar_pantalla_inicio(pantalla):
               'Juan Castellón']
     
     ts = fuente.render(texto, True , (255,255,255))
-    rect_texto = ts.get_rect(center=(240,150))
+    rect_texto = ts.get_rect(center=(520,160))
 
-    fondo = pygame.transform.scale(pygame.image.load('assets/fondo.png'), (480,480))
+    fondo = pygame.transform.scale(pygame.image.load('assets/fondo.png'), (1080,580))
     pygame.display.set_caption("Pantalla de incio")
-    boton_jugar = Button(x= 140, y = 380, text = "JUGAR")
+    boton_jugar = Button(x= 420, y = 420, text = "JUGAR")
 
     esperando = True
     while esperando == True:
@@ -146,11 +154,30 @@ def dibujar_movimientos_legales(pantalla, movimientos):
     for casilla in movimientos:
         columna = chess.square_file(casilla)
         fila = 7 - chess.square_rank(casilla)
-        centro_x = columna * TAM_CASILLA + TAM_CASILLA // 2
-        centro_y = fila * TAM_CASILLA + TAM_CASILLA // 2
+        centro_x = columna * TAM_CASILLA + TAM_CASILLA // 2 + OFFSET_X
+        centro_y = fila * TAM_CASILLA + TAM_CASILLA // 2 + OFFSET_Y
         pygame.draw.circle(pantalla, color, (centro_x, centro_y), r)
 
+def dibujar_movimientos_realizados(pantalla, movimientos_realizados):
+    pygame.draw.rect(pantalla, (190, 190, 190), (800, OFFSET_Y, 200, 480), 0, 10, 10,10,10,10)  
+    fuente = pygame.font.Font('res/fonts/Silkscreen-Bold.ttf', 20)
+    texto = fuente.render("Movimientos", True, (0, 0, 0))
+    texto2 = fuente.render("Realizados", True, (0, 0, 0))
+    texto_rect = texto.get_rect(center=(900, 30 + OFFSET_Y))
+    texto_rect2 = texto2.get_rect(center=(900, 60 + OFFSET_Y))
+    pantalla.blit(texto, texto_rect)
+    pantalla.blit(texto2, texto_rect2)
 
+    fuente2 = pygame.font.Font('res/fonts/Silkscreen-Regular.ttf', 17)
+    if movimientos_realizados:
+        for i, movimiento in enumerate(movimientos_realizados):
+            if i < 13:
+                texto_movimiento = fuente2.render(str(movimiento), True, (255, 0, 0))
+                posmovemiento = texto_movimiento.get_rect(center=(900, 90 + i * 30 + OFFSET_Y))
+                pantalla.blit(texto_movimiento, posmovemiento)
+                if i == 12:
+                    movimientos_realizados.clear()
+                    i = 0
 
 
 

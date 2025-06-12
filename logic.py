@@ -7,6 +7,7 @@ class JuegoAjedrez:
         self.casilla_origen = None
         self.movimientos_legales = []
         self.movimientos_realizados = []
+        self.se_mueve = False
 
     #si la casilla origen es None, significa que no se ha seleccionado una pieza
     def seleccionar_casilla(self, fila, columna):
@@ -24,6 +25,12 @@ class JuegoAjedrez:
     #si no es none significa que ya hay casilla de origen
         else:
             movimiento = chess.Move(self.casilla_origen, casilla)
+
+            if self.casilla_origen == casilla:
+                self.casilla_origen = None
+                self.movimientos_legales = []
+                return
+
             pieza_origen = self.tablero.piece_at(self.casilla_origen)
 
             es_promocion = (
@@ -38,10 +45,15 @@ class JuegoAjedrez:
 
             if movimiento in self.tablero.legal_moves:
                 self.tablero.push(movimiento)
-
+                self.se_mueve = True
+                
             self.movimientos_legales = []
-            self.movimientos_realizados.append(movimiento)
+
+            if self.se_mueve == True:
+                self.movimientos_realizados.append(movimiento)
+
             self.casilla_origen = None
+            self.se_mueve = False
     #si el movimiento es legal, se pushea el movimiento
     #se limpia la lista de legal moves
 

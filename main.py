@@ -1,16 +1,19 @@
 import pygame
-import chess
 import graphics
 import logic
 import sys
-import threading
 
 pygame.init()
-ANCHO, ALTO =  graphics.TAM_CASILLA * 8, graphics.TAM_CASILLA * 8
-pantalla = pygame.display.set_mode((ANCHO, ALTO))
-pygame.display.set_caption("Ajedrez")
-graphics.mostrar_pantalla_inicio(pantalla)
+ANCHO_TABLERO, ALTO_TABLERO =  graphics.TAM_CASILLA * 8, graphics.TAM_CASILLA * 8
 
+#espacio extra para agregar mas funcionalidades
+ANCHO_VENTANA = ANCHO_TABLERO + 600
+ALTO_VENTANA = ALTO_TABLERO + 100
+
+pantalla = pygame.display.set_mode((ANCHO_VENTANA, ALTO_VENTANA))
+graphics.mostrar_pantalla_inicio(pantalla)
+pantalla.fill((25, 42, 86)) 
+pygame.display.set_caption("Ajedrez")
 # Inicializando la lógica del juego
 juego = logic.JuegoAjedrez()
 
@@ -24,14 +27,16 @@ while corriendo:
 
         if evento.type == pygame.MOUSEBUTTONDOWN:
             x, y = pygame.mouse.get_pos()
-            columna = x // graphics.TAM_CASILLA
-            fila = y // graphics.TAM_CASILLA
-            juego.seleccionar_casilla(fila, columna)
+            fila = (y - graphics.OFFSET_Y) // graphics.TAM_CASILLA
+            columna = (x - graphics.OFFSET_X) // graphics.TAM_CASILLA
+            if 0 <= fila < 8 and 0 <= columna < 8:
+                juego.seleccionar_casilla(fila, columna)
 
     graphics.dibujar_tablero(pantalla)
     graphics.cargar_imagenes()
     graphics.dibujar_piezas(pantalla, juego.tablero)
-
+    graphics.dibujar_movimientos_realizados(pantalla, juego.movimientos_realizados)
+    
     # si hay una casilla seleccionada se dibujan los movimientos legales 
     if juego.casilla_origen is not None:
         graphics.dibujar_movimientos_legales(pantalla, juego.movimientos_legales)
