@@ -38,6 +38,7 @@ while corriendo == True:
     graphics.cargar_imagenes()
     graphics.dibujar_piezas(pantalla, juego.tablero)
     graphics.dibujar_movimientos_realizados(pantalla, juego.movimientos_realizados)
+    graphics.dibujar_botones_funcionalidades(pantalla)
     
     # si hay una casilla seleccionada se dibujan los movimientos legales 
     if juego.casilla_origen is not None:

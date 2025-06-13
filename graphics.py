@@ -179,7 +179,10 @@ def dibujar_movimientos_realizados(pantalla, movimientos_realizados):
                     movimientos_realizados.clear()
                     i = 0
 
-
+def dibujar_botones_funcionalidades(pantallla):
+    boton_regresar_jugada = Button(200,400, "<-", 200, 50)
+    boton_regresar_jugada.update()
+    boton_regresar_jugada.draw(pantallla)
 
 
 
