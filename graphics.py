@@ -115,11 +115,11 @@ def mostrar_pantalla_inicio(pantalla):
               'Juan Castellón']
     
     ts = fuente.render(texto, True , (255,255,255))
-    rect_texto = ts.get_rect(center=(520,160))
+    rect_texto = ts.get_rect(center=(520,220))
 
-    fondo = pygame.transform.scale(pygame.image.load('assets/fondo.png'), (1080,580))
+    fondo = pygame.transform.scale(pygame.image.load('assets/fondoeditado.png'), (1080,580))
     pygame.display.set_caption("Pantalla de incio")
-    boton_jugar = Button(x= 420, y = 420, text = "JUGAR")
+    boton_jugar = Button(x= 430, y = 320, text = "JUGAR")
 
     esperando = True
     while esperando == True:
@@ -161,8 +161,8 @@ def dibujar_movimientos_legales(pantalla, movimientos):
 def dibujar_movimientos_realizados(pantalla, movimientos_realizados):
     pygame.draw.rect(pantalla, (107, 42, 220), (800, OFFSET_Y, 200, 480), 0, 10, 10,10,10,10)  
     fuente = pygame.font.Font('res/fonts/Silkscreen-Bold.ttf', 20)
-    texto = fuente.render("Movimientos", True, (13,213,245))
-    texto2 = fuente.render("Realizados", True, (13,213,245))
+    texto = fuente.render("Movimientos", True, (255, 255, 255))
+    texto2 = fuente.render("Realizados", True, (255, 255, 255))
     texto_rect = texto.get_rect(center=(900, 30 + OFFSET_Y))
     texto_rect2 = texto2.get_rect(center=(900, 60 + OFFSET_Y))
     pantalla.blit(texto, texto_rect)

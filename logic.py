@@ -35,13 +35,13 @@ class JuegoAjedrez:
 
             es_promocion = (
             pieza_origen.piece_type == chess.PAWN and 
-            chess.square_rank(casilla) == 0 or chess.square_rank(casilla) == 7
+            (chess.square_rank(casilla) == 0 or chess.square_rank(casilla) == 7) #parentesis para que no se confunda con los operadores
             )
 
             if es_promocion:
                 movimiento = chess.Move(self.casilla_origen, casilla, promotion=chess.QUEEN)
             else:
-                movimiento = chess.Move(self.casilla_origen, casilla)
+                movimiento = chess.Move(self.casilla_origen, casilla, promotion=None)
 
             if movimiento in self.tablero.legal_moves:
                 self.tablero.push(movimiento)
