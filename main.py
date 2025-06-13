@@ -12,7 +12,9 @@ ALTO_VENTANA = ALTO_TABLERO + 100
 
 pantalla = pygame.display.set_mode((ANCHO_VENTANA, ALTO_VENTANA))
 graphics.mostrar_pantalla_inicio(pantalla)
-pantalla.fill((25, 42, 86)) 
+fondo = pygame.image.load("assets/fondojuego.png")
+pygame.transform.scale(fondo, (ANCHO_VENTANA, ALTO_VENTANA))
+pantalla.blit(fondo, (0, 0))
 pygame.display.set_caption("Ajedrez")
 # Inicializando la lógica del juego
 juego = logic.JuegoAjedrez()
@@ -20,7 +22,7 @@ juego = logic.JuegoAjedrez()
 clock = pygame.time.Clock()
 corriendo = True
 
-while corriendo:
+while corriendo == True:
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
             corriendo = False

@@ -75,7 +75,7 @@ OFFSET_X = 285
 OFFSET_Y = 50
 
 def dibujar_tablero(pantalla):
-    colores = [pygame.Color("white"), pygame.Color("grey")]
+    colores = [pygame.Color("white"), (107, 42,220)]
     for fila in range(8):
         for columna in range(8):
             color = colores[(fila + columna) % 2] #para alternar el color en cada casilla
@@ -159,10 +159,10 @@ def dibujar_movimientos_legales(pantalla, movimientos):
         pygame.draw.circle(pantalla, color, (centro_x, centro_y), r)
 
 def dibujar_movimientos_realizados(pantalla, movimientos_realizados):
-    pygame.draw.rect(pantalla, (190, 190, 190), (800, OFFSET_Y, 200, 480), 0, 10, 10,10,10,10)  
+    pygame.draw.rect(pantalla, (107, 42, 220), (800, OFFSET_Y, 200, 480), 0, 10, 10,10,10,10)  
     fuente = pygame.font.Font('res/fonts/Silkscreen-Bold.ttf', 20)
-    texto = fuente.render("Movimientos", True, (0, 0, 0))
-    texto2 = fuente.render("Realizados", True, (0, 0, 0))
+    texto = fuente.render("Movimientos", True, (13,213,245))
+    texto2 = fuente.render("Realizados", True, (13,213,245))
     texto_rect = texto.get_rect(center=(900, 30 + OFFSET_Y))
     texto_rect2 = texto2.get_rect(center=(900, 60 + OFFSET_Y))
     pantalla.blit(texto, texto_rect)
@@ -172,7 +172,7 @@ def dibujar_movimientos_realizados(pantalla, movimientos_realizados):
     if movimientos_realizados:
         for i, movimiento in enumerate(movimientos_realizados):
             if i < 13:
-                texto_movimiento = fuente2.render(str(movimiento), True, (255, 0, 0))
+                texto_movimiento = fuente2.render(str(movimiento), True, (255, 255, 255))
                 posmovemiento = texto_movimiento.get_rect(center=(900, 90 + i * 30 + OFFSET_Y))
                 pantalla.blit(texto_movimiento, posmovemiento)
                 if i == 12:
