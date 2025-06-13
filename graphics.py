@@ -1,6 +1,7 @@
 import chess
 import pygame 
 import sys
+import logic
 
 class Button:
     def __init__(self, x=0, y=0, text="", width=200, height=50, elev=6):
@@ -159,7 +160,7 @@ def dibujar_movimientos_legales(pantalla, movimientos):
         pygame.draw.circle(pantalla, color, (centro_x, centro_y), r)
 
 def dibujar_movimientos_realizados(pantalla, movimientos_realizados):
-    pygame.draw.rect(pantalla, (107, 42, 220), (800, OFFSET_Y, 200, 480), 0, 10, 10,10,10,10)  
+    pygame.draw.rect(pantalla, (107, 42, 220), (800, OFFSET_Y, 200, 480), 0, 10, 10,10,10,10)
     fuente = pygame.font.Font('res/fonts/Silkscreen-Bold.ttf', 20)
     texto = fuente.render("Movimientos", True, (255, 255, 255))
     texto2 = fuente.render("Realizados", True, (255, 255, 255))
@@ -169,20 +170,34 @@ def dibujar_movimientos_realizados(pantalla, movimientos_realizados):
     pantalla.blit(texto2, texto_rect2)
 
     fuente2 = pygame.font.Font('res/fonts/Silkscreen-Regular.ttf', 17)
-    if movimientos_realizados:
-        for i, movimiento in enumerate(movimientos_realizados):
-            if i < 13:
-                texto_movimiento = fuente2.render(str(movimiento), True, (255, 255, 255))
-                posmovemiento = texto_movimiento.get_rect(center=(900, 90 + i * 30 + OFFSET_Y))
-                pantalla.blit(texto_movimiento, posmovemiento)
-                if i == 12:
-                    movimientos_realizados.clear()
-                    i = 0
 
-def dibujar_botones_funcionalidades(pantallla):
-    boton_regresar_jugada = Button(200,400, "<-", 200, 50)
+    if movimientos_realizados:
+        texto = fuente.render("Movimientos", True, (255, 255, 255))
+        texto2 = fuente.render("Realizados", True, (255, 255, 255))
+        movimientos = []
+        movimientos = movimientos_realizados[-13:]
+
+        for i in range (13):
+            pygame.draw.rect(pantalla, (107, 42, 220), (800, OFFSET_Y, 200, 480), 0, 10, 10,10,10,10)
+            for j, movimiento in enumerate(movimientos):
+                texto_movimiento = fuente2.render(str(movimiento), True, (255, 255, 255))
+                posmovemiento = texto_movimiento.get_rect(center=(900, 90 + j*30 + OFFSET_Y))
+                pantalla.blit(texto, texto_rect)
+                pantalla.blit(texto2, texto_rect2)
+                pantalla.blit(texto_movimiento, posmovemiento)
+
+            
+            
+def dibujar_botones_funcionalidades(pantalla, boton_regresar_jugada,juego):
     boton_regresar_jugada.update()
-    boton_regresar_jugada.draw(pantallla)
+    boton_regresar_jugada.draw(pantalla)
+    if boton_regresar_jugada.clicked:
+        if len(juego.movimientos_realizados) > 0 and len(juego.tablero.move_stack) > 0:
+            juego.movimientos_realizados.pop()
+            juego.tablero.pop()
+        else:
+            return
+        
 
 
 

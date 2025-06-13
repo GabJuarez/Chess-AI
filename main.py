@@ -5,7 +5,6 @@ import sys
 
 pygame.init()
 ANCHO_TABLERO, ALTO_TABLERO =  graphics.TAM_CASILLA * 8, graphics.TAM_CASILLA * 8
-
 #espacio extra para agregar mas funcionalidades
 ANCHO_VENTANA = ANCHO_TABLERO + 600
 ALTO_VENTANA = ALTO_TABLERO + 100
@@ -16,6 +15,11 @@ fondo = pygame.image.load("assets/fondojuego.png")
 pygame.transform.scale(fondo, (ANCHO_VENTANA, ALTO_VENTANA))
 pantalla.blit(fondo, (0, 0))
 pygame.display.set_caption("Ajedrez")
+
+#boton deshacer
+boton_regresar_jugada = graphics.Button(50,425+ graphics.OFFSET_Y, "<-", 200, 50)
+
+
 # Inicializando la lógica del juego
 juego = logic.JuegoAjedrez()
 
@@ -33,12 +37,15 @@ while corriendo == True:
             columna = (x - graphics.OFFSET_X) // graphics.TAM_CASILLA
             if 0 <= fila < 8 and 0 <= columna < 8:
                 juego.seleccionar_casilla(fila, columna)
-
+            
+    
+    
+            
     graphics.dibujar_tablero(pantalla)
     graphics.cargar_imagenes()
     graphics.dibujar_piezas(pantalla, juego.tablero)
     graphics.dibujar_movimientos_realizados(pantalla, juego.movimientos_realizados)
-    graphics.dibujar_botones_funcionalidades(pantalla)
+    graphics.dibujar_botones_funcionalidades(pantalla, boton_regresar_jugada,juego)
     
     # si hay una casilla seleccionada se dibujan los movimientos legales 
     if juego.casilla_origen is not None:

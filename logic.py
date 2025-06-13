@@ -1,5 +1,4 @@
 import chess
-import pygame
 
 class JuegoAjedrez:
     def __init__(self):
@@ -71,3 +70,8 @@ class JuegoAjedrez:
     def coronar_pieza(self, casilla):
         if self.tablero.piece_type_at(casilla) == chess.PAWN and (chess.square_rank(casilla) == 0 or chess.square_rank(casilla) == 7):
             self.tablero.set_piece_at(casilla, chess.Piece(chess.QUEEN, self.tablero.color_at(casilla)))
+
+    def deshacer_ultimo_movimiento(self):
+        self.movimientos_realizados.pop()
+        
+        
