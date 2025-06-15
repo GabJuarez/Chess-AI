@@ -1,7 +1,6 @@
 import chess
 import pygame 
 import sys
-import logic
 
 class Button:
     def __init__(self, x=0, y=0, text="", width=200, height=50, elev=6):
