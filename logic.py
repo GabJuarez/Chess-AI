@@ -73,5 +73,6 @@ class JuegoAjedrez:
 
     def deshacer_ultimo_movimiento(self):
         self.movimientos_realizados.pop()
+        self.tablero.move_stack.pop()
         
         
