@@ -1,4 +1,5 @@
 import chess
+from evaluator import ArbolMinimax
 
 class JuegoAjedrez:
     def __init__(self):
@@ -45,6 +46,9 @@ class JuegoAjedrez:
             if movimiento in self.tablero.legal_moves:
                 self.tablero.push(movimiento)
                 self.se_mueve = True
+
+                if hasattr(self, 'movimiento_sugerido'):
+                    self.movimiento_sugerido = None
                 
             self.movimientos_legales = []
 
@@ -75,4 +79,8 @@ class JuegoAjedrez:
         self.movimientos_realizados.pop()
         self.tablero.move_stack.pop()
         
-        
+def recomendar_movimiento(juego):
+    arbol = ArbolMinimax(juego.tablero, 3, juego.tablero.turn)
+    arbol.construir_arbol(arbol.raiz, 3, True)
+    mejor_movimiento = arbol.obtener_mejor_movimiento()
+    return mejor_movimiento

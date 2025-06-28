@@ -196,9 +196,25 @@ def dibujar_botones_funcionalidades(pantalla, boton_regresar_jugada,juego):
             juego.tablero.pop()
         else:
             return
-        
 
+def dibujar_movimiento_recomendado(pantalla, movimiento):
+    color = (255, 0, 0)
 
+    origen = movimiento.from_square
+    destino = movimiento.to_square
 
+    for casilla in [origen, destino]:
+        columna = chess.square_file(casilla)
+        fila = 7 - chess.square_rank(casilla)
 
-
+        pygame.draw.rect(
+            pantalla,
+            color,
+            pygame.Rect(
+                columna * TAM_CASILLA + OFFSET_X,
+                fila * TAM_CASILLA + OFFSET_Y, 
+                TAM_CASILLA,
+                TAM_CASILLA
+            ),
+            4
+        )

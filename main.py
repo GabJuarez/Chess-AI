@@ -20,8 +20,9 @@ def main():
 
     #boton deshacer
     boton_regresar_jugada = graphics.Button(50,425+ graphics.OFFSET_Y, "<-", 200, 50)
-
-
+    #boton recomendar
+    boton_recomendar = graphics.Button(50, 300 + graphics.OFFSET_Y, 'Recomendar', 200, 50)
+    
     # Inicializando la lógica del juego
     juego = logic.JuegoAjedrez()
 
@@ -43,8 +44,18 @@ def main():
         graphics.dibujar_tablero(pantalla)
         graphics.cargar_imagenes()
         graphics.dibujar_piezas(pantalla, juego.tablero)
+        if hasattr(juego, 'movimiento_sugerido') and juego.movimiento_sugerido is not None:
+            graphics.dibujar_movimiento_recomendado(pantalla, juego.movimiento_sugerido)
         graphics.dibujar_movimientos_realizados(pantalla, juego.movimientos_realizados)
-        graphics.dibujar_botones_funcionalidades(pantalla, boton_regresar_jugada,juego)
+        graphics.dibujar_botones_funcionalidades(pantalla, boton_regresar_jugada, juego)
+        boton_recomendar.update()
+        boton_recomendar.draw(pantalla)
+
+        if boton_recomendar.clicked:
+            mejor_movimiento = logic.recomendar_movimiento(juego)
+            if mejor_movimiento:
+                print(f'Mejor movimiento sugeido: {mejor_movimiento}')
+                juego.movimiento_sugerido = mejor_movimiento
 
         # si hay una casilla seleccionada se dibujan los movimientos legales 
         if juego.casilla_origen is not None:
