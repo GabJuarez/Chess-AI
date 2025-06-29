@@ -74,7 +74,8 @@ class JuegoAjedrez:
 
 def recomendar_movimiento(juego):
     color_turno = juego.tablero.turn
-    prob_error = 0.3 if color_turno == chess.BLACK else 0.0
-    arbol = ArbolMinimax(juego.tablero, 3, color_turno, probabilidad_error=prob_error)
-    arbol.construir_arbol(arbol.raiz, 3, True)
+    profundidad = 3  # Menor profundidad para mejor rendimiento
+    prob_error = 0.8  # 80% de error para el color sesgado
+    arbol = ArbolMinimax(juego.tablero, profundidad, color_turno, probabilidad_error=prob_error)
+    arbol.construir_arbol(arbol.raiz, profundidad, True)
     return arbol.obtener_mejor_movimiento()

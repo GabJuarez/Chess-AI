@@ -78,7 +78,7 @@ def dibujar_tablero(pantalla):
     colores = [pygame.Color("white"), (107, 42,220)]
     for fila in range(8):
         for columna in range(8):
-            color = colores[(fila + columna) % 2] #para alternar el color en cada casilla
+            color = colores[(fila + columna) % 2]
             pygame.draw.rect(
                 pantalla,
                 color,
@@ -93,17 +93,17 @@ def dibujar_piezas(pantalla, tablero_chess):
     for casilla in chess.SQUARES:
         pieza = tablero_chess.piece_at(casilla)
         if pieza:
-            columna = chess.square_file(casilla) #piece_at devuelve la pieza que esta en una casilla especifica del tablero
-            fila = 7 - chess.square_rank(casilla)  # invertir eje Y para pygame
+            columna = chess.square_file(casilla)
+            fila = 7 - chess.square_rank(casilla)
             color = 'w' if pieza.color == chess.WHITE else 'b'
-            clave_imagen = color + pieza.symbol().lower() #.lower porque la libreria de chess devuelve mayuscula o no dependiendo del color
+            clave_imagen = color + pieza.symbol().lower()
             imagen = IMAGENES[clave_imagen]
             pantalla.blit(imagen,
                          pygame.Rect(
                             columna * TAM_CASILLA + OFFSET_X,
                             fila * TAM_CASILLA + OFFSET_Y,
                             TAM_CASILLA,
-                            TAM_CASILLA)) #block image tansfer a la pantalla
+                            TAM_CASILLA))
 
 def mostrar_pantalla_inicio(pantalla):
     fuente = pygame.font.Font('res/fonts/Silkscreen-Bold.ttf', 90)
@@ -149,8 +149,7 @@ def mostrar_pantalla_inicio(pantalla):
 
 def dibujar_movimientos_legales(pantalla, movimientos):
     color = (0, 160, 154)
-    r = 4 #tamano del radio de los circulos
-
+    r = max(4, TAM_CASILLA // 12)
     for casilla in movimientos:
         columna = chess.square_file(casilla)
         fila = 7 - chess.square_rank(casilla)
@@ -159,32 +158,29 @@ def dibujar_movimientos_legales(pantalla, movimientos):
         pygame.draw.circle(pantalla, color, (centro_x, centro_y), r)
 
 def dibujar_movimientos_realizados(pantalla, movimientos_realizados):
-    pygame.draw.rect(pantalla, (107, 42, 220), (800, OFFSET_Y, 200, 480), 0, 10, 10,10,10,10)
-    fuente = pygame.font.Font('res/fonts/Silkscreen-Bold.ttf', 20)
+    ancho_panel = PANEL_ANCHO if 'PANEL_ANCHO' in globals() else 200
+    alto_panel = TAM_CASILLA * 8
+    margen_derecho = 50
+    x_panel = pantalla.get_width() - ancho_panel - margen_derecho
+    y_panel = OFFSET_Y
+    pygame.draw.rect(pantalla, (107, 42, 220), (x_panel, y_panel, ancho_panel, alto_panel), 0, 10, 10,10,10,10)
+    fuente_size = 22 if ancho_panel <= 220 else 28
+    fuente = pygame.font.Font('res/fonts/Silkscreen-Bold.ttf', fuente_size)
     texto = fuente.render("Movimientos", True, (255, 255, 255))
     texto2 = fuente.render("Realizados", True, (255, 255, 255))
-    texto_rect = texto.get_rect(center=(900, 30 + OFFSET_Y))
-    texto_rect2 = texto2.get_rect(center=(900, 60 + OFFSET_Y))
+    texto_rect = texto.get_rect(center=(x_panel + ancho_panel // 2, y_panel + fuente_size + 10))
+    texto_rect2 = texto2.get_rect(center=(x_panel + ancho_panel // 2, y_panel + 2*fuente_size + 20))
     pantalla.blit(texto, texto_rect)
     pantalla.blit(texto2, texto_rect2)
 
-    fuente2 = pygame.font.Font('res/fonts/Silkscreen-Regular.ttf', 17)
+    fuente2 = pygame.font.Font('res/fonts/Silkscreen-Regular.ttf', 16 if ancho_panel <= 220 else 20)
 
     if movimientos_realizados:
-        texto = fuente.render("Movimientos", True, (255, 255, 255))
-        texto2 = fuente.render("Realizados", True, (255, 255, 255))
-        movimientos = []
         movimientos = movimientos_realizados[-13:]
-
-        for i in range (13):
-            pygame.draw.rect(pantalla, (107, 42, 220), (800, OFFSET_Y, 200, 480), 0, 10, 10,10,10,10)
-            for j, movimiento in enumerate(movimientos):
-                texto_movimiento = fuente2.render(str(movimiento), True, (255, 255, 255))
-                posmovemiento = texto_movimiento.get_rect(center=(900, 90 + j*30 + OFFSET_Y))
-                pantalla.blit(texto, texto_rect)
-                pantalla.blit(texto2, texto_rect2)
-                pantalla.blit(texto_movimiento, posmovemiento)
-
+        for j, movimiento in enumerate(movimientos):
+            texto_movimiento = fuente2.render(str(movimiento), True, (255, 255, 255))
+            posmovemiento = texto_movimiento.get_rect(center=(x_panel + ancho_panel // 2, y_panel + 3*fuente_size + 30 + j*int(fuente_size*1.2)))
+            pantalla.blit(texto_movimiento, posmovemiento)
             
             
 def dibujar_botones_funcionalidades(pantalla, boton_regresar_jugada,juego):
@@ -199,14 +195,11 @@ def dibujar_botones_funcionalidades(pantalla, boton_regresar_jugada,juego):
 
 def dibujar_movimiento_recomendado(pantalla, movimiento):
     color = (255, 0, 0)
-
     origen = movimiento.from_square
     destino = movimiento.to_square
-
     for casilla in [origen, destino]:
         columna = chess.square_file(casilla)
         fila = 7 - chess.square_rank(casilla)
-
         pygame.draw.rect(
             pantalla,
             color,
@@ -216,5 +209,24 @@ def dibujar_movimiento_recomendado(pantalla, movimiento):
                 TAM_CASILLA,
                 TAM_CASILLA
             ),
-            4
+            max(4, TAM_CASILLA // 8)
         )
+
+def actualizar_dimensiones(ancho_ventana, alto_ventana, ancho_panel=None):
+    global TAM_CASILLA, OFFSET_X, OFFSET_Y, PANEL_ANCHO
+    margen_lateral = 50
+    if ancho_panel is None:
+        ancho_panel = 200
+    PANEL_ANCHO = ancho_panel
+    ancho_botones = 220 + 50
+    margen_panel = 50
+    ancho_disponible = ancho_ventana - ancho_panel - ancho_botones - margen_lateral
+    alto_disponible = alto_ventana - 2 * margen_lateral
+    tam_tablero = min(ancho_disponible, alto_disponible)
+    TAM_CASILLA = max(40, tam_tablero // 8)
+    # Coloca el tablero justo después de los botones, centrado verticalmente
+    OFFSET_X = ancho_botones + ((ancho_disponible - TAM_CASILLA * 8) // 2)
+    OFFSET_Y = (alto_ventana - TAM_CASILLA * 8) // 2
+    # Guardar el margen del panel para usarlo en dibujar_movimientos_realizados
+    global PANEL_MARGEN_DERECHO
+    PANEL_MARGEN_DERECHO = margen_panel
