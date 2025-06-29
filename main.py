@@ -3,24 +3,23 @@ import graphics
 import logic
 import sys
 
-
 def main():
     pygame.init()
-    ANCHO_TABLERO, ALTO_TABLERO =  graphics.TAM_CASILLA * 8, graphics.TAM_CASILLA * 8
-    #espacio extra para agregar mas funcionalidades
+    ANCHO_TABLERO, ALTO_TABLERO = graphics.TAM_CASILLA * 8, graphics.TAM_CASILLA * 8
+    # espacio extra para agregar más funcionalidades
     ANCHO_VENTANA = ANCHO_TABLERO + 600
     ALTO_VENTANA = ALTO_TABLERO + 100
 
     pantalla = pygame.display.set_mode((ANCHO_VENTANA, ALTO_VENTANA))
     graphics.mostrar_pantalla_inicio(pantalla)
     fondo = pygame.image.load("assets/fondojuego.png")
-    pygame.transform.scale(fondo, (ANCHO_VENTANA, ALTO_VENTANA))
+    fondo = pygame.transform.scale(fondo, (ANCHO_VENTANA, ALTO_VENTANA))  # CORREGIDO: se debe reasignar
     pantalla.blit(fondo, (0, 0))
     pygame.display.set_caption("Ajedrez")
 
-    #boton deshacer
-    boton_regresar_jugada = graphics.Button(50,425+ graphics.OFFSET_Y, "<-", 200, 50)
-    #boton recomendar
+    # botón deshacer
+    boton_regresar_jugada = graphics.Button(50, 425 + graphics.OFFSET_Y, "<-", 200, 50)
+    # botón recomendar
     boton_recomendar = graphics.Button(50, 300 + graphics.OFFSET_Y, 'Recomendar', 200, 50)
     
     # Inicializando la lógica del juego
@@ -29,7 +28,7 @@ def main():
     clock = pygame.time.Clock()
     corriendo = True
 
-    while corriendo == True:
+    while corriendo:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 corriendo = False
@@ -44,24 +43,27 @@ def main():
         graphics.dibujar_tablero(pantalla)
         graphics.cargar_imagenes()
         graphics.dibujar_piezas(pantalla, juego.tablero)
-        if hasattr(juego, 'movimiento_sugerido') and juego.movimiento_sugerido is not None:
+
+        if juego.movimiento_sugerido is not None:
             graphics.dibujar_movimiento_recomendado(pantalla, juego.movimiento_sugerido)
+
         graphics.dibujar_movimientos_realizados(pantalla, juego.movimientos_realizados)
         graphics.dibujar_botones_funcionalidades(pantalla, boton_regresar_jugada, juego)
+        
         boton_recomendar.update()
         boton_recomendar.draw(pantalla)
 
         if boton_recomendar.clicked:
             mejor_movimiento = logic.recomendar_movimiento(juego)
             if mejor_movimiento:
-                print(f'Mejor movimiento sugeido: {mejor_movimiento}')
+                print(f'Mejor movimiento sugerido: {mejor_movimiento}')
                 juego.movimiento_sugerido = mejor_movimiento
 
         # si hay una casilla seleccionada se dibujan los movimientos legales 
         if juego.casilla_origen is not None:
             graphics.dibujar_movimientos_legales(pantalla, juego.movimientos_legales)
 
-        # probando los estados de la partida por consola
+        # Estados de partida
         if juego.tablero.is_checkmate():
             print("Jaque mate!")
             corriendo = False
