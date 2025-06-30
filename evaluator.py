@@ -14,7 +14,7 @@ class ArbolMinimax:
         self.raiz = Nodo(tablero.copy())
         self.maxDepth = maxDepth
         self.color = color
-        self.probabilidad_error = probabilidad_error  # Sesgo: 0.3 = 30% de error
+        self.probabilidad_error = probabilidad_error  
         # Elegir aleatoriamente el color al que se le aplicará el sesgo si no se especifica
         if color_sesgo is None:
             self.color_sesgo = random.choice([chess.WHITE, chess.BLACK])

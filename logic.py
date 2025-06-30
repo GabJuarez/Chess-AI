@@ -25,6 +25,7 @@ class JuegoAjedrez:
         else:
             movimiento = chess.Move(self.casilla_origen, casilla)
 
+            # Si la casilla seleccionada es la misma que la de origen, se deselecciona
             if self.casilla_origen == casilla:
                 self.casilla_origen = None
                 self.movimientos_legales = []
@@ -74,8 +75,8 @@ class JuegoAjedrez:
 
 def recomendar_movimiento(juego):
     color_turno = juego.tablero.turn
-    profundidad = 3  # Menor profundidad para mejor rendimiento
-    prob_error = 0.8  # 80% de error para el color sesgado
+    profundidad = 3  # menor profundidad para mejor rendimiento
+    prob_error = 0.8  # 80% de error 
     arbol = ArbolMinimax(juego.tablero, profundidad, color_turno, probabilidad_error=prob_error)
     arbol.construir_arbol(arbol.raiz, profundidad, True)
     return arbol.obtener_mejor_movimiento()

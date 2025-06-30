@@ -60,7 +60,7 @@ def main():
     clock = pygame.time.Clock()
     corriendo = True
 
-    # Recalcular dimensiones al inicio y tras cada cambio de tamaño
+    #dependiendo el tamaño actual de la ventana el alto y ancho de los elementos se ajustan
     graphics.actualizar_dimensiones(ANCHO_VENTANA, ALTO_VENTANA)
 
     while corriendo:
@@ -102,7 +102,6 @@ def main():
         if boton_recomendar.clicked:
             mejor_movimiento = logic.recomendar_movimiento(juego)
             if mejor_movimiento:
-                print(f'Mejor movimiento sugerido: {mejor_movimiento}')
                 juego.movimiento_sugerido = mejor_movimiento
 
         # toggle maximizar/restaurar SOLO cuando se detecta el click
